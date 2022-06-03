@@ -18,6 +18,10 @@ const (
 
 //CallMethod calls the registered hooks
 func (s *Session) CallMethod(method string, value interface{}){
+
+	// use MethodByName to get function pointer
+	// if we want to use hooks, then we should realize target struct's hooks method
+	// such as func (account *Account) BeforeInsert(s *session.Session) error {}
 	fm := reflect.ValueOf(s.RefTable().Model).MethodByName(method)
 
 	if value != nil{

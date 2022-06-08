@@ -48,14 +48,13 @@ func startAPIServer(apiAddr string, gee *geecache.Group) {
 		}))
 	log.Println("fontend server is running at", apiAddr)
 	log.Fatal(http.ListenAndServe(apiAddr[7:], nil))
-
 }
 
 func main(){
 	var port int
 	var api bool
 	flag.IntVar(&port, "port", 8001, "Geecache server port")
-	flag.BoolVar(&api, "api", false, "Start a api server?")
+	flag.BoolVar(&api, "api", true, "Start a api server?")
 	flag.Parse()
 
 	apiAddr := "http://localhost:9999"
@@ -73,6 +72,9 @@ func main(){
 	gee := createGroup()
 	if api {
 		go startAPIServer(apiAddr, gee)
+		for i := 0 ; i < 3 ; i++{
+			go http.ListenAndServe(addrMap[i], nil)
+		}
 	}
 	startCacheServer(addrMap[port], []string(addrs), gee)
 }
